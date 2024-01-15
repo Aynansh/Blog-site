@@ -18,10 +18,19 @@ const uploadmiddleware = multer({ dest: "uploads/" });
 const upload = multer();
 
 app.use(cors({
-  origin: 'http://localhost:3000/',
+  origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
 }));
+
+app.all("*", function (req, res) {
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type,Content-Length, Authorization, Accept,X-Requested-With"
+  );
+  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+});
 
 app.use(express.json());
 app.use(cookieparser());
