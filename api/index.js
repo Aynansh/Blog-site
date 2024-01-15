@@ -21,9 +21,10 @@ app.UseCors((x) =>
   x
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .WithOrigins("https://zenblog-wwuk.onrender.com") // Specify the allowed origin
+    .WithOrigins("http://localhost:3000") // Specify the allowed origin
     .AllowCredentials()
 );
+
 app.use(express.json());
 app.use(cookieparser());
 // app.use("/uploads", express.static(__dirname + "/uploads"));
