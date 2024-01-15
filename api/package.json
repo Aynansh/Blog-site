@@ -10,6 +10,9 @@
     "mongoose": "^8.0.4",
     "multer": "^1.4.5-lts.1"
   },
+  "scripts":{
+    "start":"node index.js"
+  },
   "devDependencies": {
     "nodemon": "^3.0.2"
   }
