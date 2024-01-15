@@ -1,4 +1,5 @@
 import { useState } from "react";
+// require('dotenv').config();
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Input } from "@nextui-org/react";
@@ -109,7 +110,7 @@ export default function Createpost() {
     logFormData(data);
     e.preventDefault();
     // console.log(files);
-    const response = await fetch("http://localhost:4000/post", {
+    const response = await fetch(`${process.env.REACT_APP_BACK_END}/post`, {
       method: "POST",
       body: data,
       credentials: "include",

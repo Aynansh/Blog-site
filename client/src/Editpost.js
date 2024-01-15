@@ -31,7 +31,7 @@ export default function Editpost() {
     });
 
   useEffect(() => {
-    fetch("http://localhost:4000/post/" + id).then((response) => {
+    fetch(`${process.env.REACT_APP_BACK_END}/post/` + id).then((response) => {
       response.json().then((postinfo) => {
         settitle(postinfo.title);
         setsummary(postinfo.summary);
@@ -63,28 +63,28 @@ export default function Editpost() {
         console.error("Error uploading image to Cloudinary:", error);
       } finally {
         setloading(false);
-        toast.dismiss(); 
+        toast.dismiss();
       }
     }
   };
 
   function updatepost(e) {
     e.preventDefault();
-    const data=new FormData();
+    const data = new FormData();
     data.append("title", title);
     data.append("summary", summary);
     data.append("content", content);
-    data.append("url", url); 
-    data.append("id",id);
-    fetch('http://localhost:4000/post',{
-        method:'PUT',
-        body:data,
-        credentials:'include',
-    })
+    data.append("url", url);
+    data.append("id", id);
+    fetch(`${process.env.REACT_APP_BACK_END}/post`, {
+      method: "PUT",
+      body: data,
+      credentials: "include",
+    });
     setredirect(true);
   }
   if (redirect) {
-    return <Navigate to={"/post/"+id} />;
+    return <Navigate to={"/post/" + id} />;
   }
   return (
     <div>
