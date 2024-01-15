@@ -17,6 +17,10 @@ const post = require("./models/Post.js");
 const uploadmiddleware = multer({ dest: "uploads/" });
 const upload = multer();
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieparser());
+
 app.use(cors({
   origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -31,9 +35,6 @@ app.all("*", function (req, res) {
   );
   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
 });
-
-app.use(express.json());
-app.use(cookieparser());
 // app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(process.env.MONGODB_URI);
