@@ -164,7 +164,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(async () => {
-    app.listen(port, () => console.log(Server Port: ${port}));
+    app.listen(port, () => console.log(`Server Port: ${port}`));
 
     /* ADD DATA ONE TIME ONLY OR AS NEEDED */
     // await mongoose.connection.db.dropDatabase();
@@ -172,7 +172,7 @@ mongoose
     // Product.insertMany(products);
     // Transaction.insertMany(transactions);
   })
-  .catch((error) => console.log(${error} did not connect));
+  .catch((error) => console.log(`${error} did not connect`));
 
 // app.listen(port, () => {
 //   console.log(`Server is running on http://localhost:${port}`);
