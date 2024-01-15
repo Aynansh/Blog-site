@@ -1,12 +1,13 @@
 const express = require("express");
 const app = express();
+require('dotenv').config();
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
 const port = 4000;
 const user = require("./models/user.js");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
-const secret = "jkkj12sk43214j5a23hdk5jlvhajksdhlakjsnbdv";
+const secret = process.env.JWT_SECRET || "defaultSecret";
 const jwt = require("jsonwebtoken");
 const cookieparser = require("cookie-parser");
 const multer = require("multer");
@@ -21,9 +22,7 @@ app.use(express.json());
 app.use(cookieparser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
 
-mongoose.connect(
-  "mongodb+srv://sakakibarakouichi2:7wAwQ9uBBrlqTLoh@cluster0.etufvpw.mongodb.net/?retryWrites=true&w=majority"
-);
+mongoose.connect(process.env.MONGODB_URI);
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -148,5 +147,3 @@ app.put("/post", upload.none(), async (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
-//mongodb+srv://sakakibarakouichi2:7wAwQ9uBBrlqTLoh@cluster0.etufvpw.mongodb.net/?retryWrites=true&w=majority
