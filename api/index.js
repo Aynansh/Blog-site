@@ -21,7 +21,7 @@ app.UseCors((x) =>
   x
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .SetIsOriginAllowed((origin) => true) // allow any origin
+    .WithOrigins("https://zenblog-wwuk.onrender.com") // Specify the allowed origin
     .AllowCredentials()
 );
 app.use(express.json());
