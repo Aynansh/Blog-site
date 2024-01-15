@@ -3,7 +3,7 @@ const app = express();
 require("dotenv").config();
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
-const port = process.env.PORT;
+const port = process.env.PORT || 8080;
 const user = require("./models/user.js");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
@@ -13,31 +13,29 @@ const cookieparser = require("cookie-parser");
 const multer = require("multer");
 const fs = require("fs");
 const post = require("./models/Post.js");
+const bodyParser=require("body-parser");
+const helmet=require("helmet");
 
 const uploadmiddleware = multer({ dest: "uploads/" });
 const upload = multer();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieparser());
+app.use(cors());
 
-app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
-}));
-
-app.all("*", function (req, res) {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Content-Type,Content-Length, Authorization, Accept,X-Requested-With"
-  );
-  res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-});
+// app.all("*", function (req, res) {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Content-Type,Content-Length, Authorization, Accept,X-Requested-With"
+//   );
+//   res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+// });
 // app.use("/uploads", express.static(__dirname + "/uploads"));
-
-mongoose.connect(process.env.MONGODB_URI);
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
@@ -160,6 +158,22 @@ app.put("/post", upload.none(), async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+mongoose
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(async () => {
+    app.listen(port, () => console.log(Server Port: ${port}));
+
+    /* ADD DATA ONE TIME ONLY OR AS NEEDED */
+    // await mongoose.connection.db.dropDatabase();
+    // KPI.insertMany(kpis);
+    // Product.insertMany(products);
+    // Transaction.insertMany(transactions);
+  })
+  .catch((error) => console.log(${error} did not connect));
+
+// app.listen(port, () => {
+//   console.log(`Server is running on http://localhost:${port}`);
+// });
