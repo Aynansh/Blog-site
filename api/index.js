@@ -12,7 +12,7 @@ const jwt = require("jsonwebtoken");
 const cookieparser = require("cookie-parser");
 const multer = require("multer");
 const fs = require("fs");
-const post = require("./models/Post.js");
+const posted = require("./models/Post.js");
 const bodyParser=require("body-parser");
 const helmet=require("helmet");
 
@@ -92,7 +92,7 @@ app.post("/post", upload.none(), async (req, res) => {
     jwt.verify(token, secret, {}, async (err, info) => {
       if (err) throw err;
 
-      const postdoc = await post.create({
+      const postdoc = await posted.create({
         title,
         summary,
         content,
@@ -109,7 +109,7 @@ app.post("/post", upload.none(), async (req, res) => {
 });
 
 app.get("/post", async (req, res) => {
-  const posts = await post
+  const posts = await posted
     .find()
     .populate("author", ["username"])
     .sort({ createdAt: -1 })
@@ -119,7 +119,7 @@ app.get("/post", async (req, res) => {
 
 app.get("/post/:id", async (req, res) => {
   const { id } = req.params;
-  const postdoc = await post.findById(id).populate("author", ["username"]);
+  const postdoc = await posted.findById(id).populate("author", ["username"]);
   res.json(postdoc);
 });
 
@@ -133,7 +133,7 @@ app.put("/post", upload.none(), async (req, res) => {
 
     jwt.verify(token, secret, {}, async (err, info) => {
       if (err) throw err;
-      const postdoc = await post.findById(id);
+      const postdoc = await posted.findById(id);
       const isauthor =
         JSON.stringify(postdoc.author) === JSON.stringify(info.id);
       // res.json({isauthor,postdoc,info});
