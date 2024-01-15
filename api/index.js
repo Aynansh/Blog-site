@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-require('dotenv').config();
+require("dotenv").config();
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
 const port = 4000;
@@ -17,10 +17,16 @@ const post = require("./models/Post.js");
 const uploadmiddleware = multer({ dest: "uploads/" });
 const upload = multer();
 
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.UseCors((x) =>
+  x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .SetIsOriginAllowed((origin) => true) // allow any origin
+    .AllowCredentials()
+);
 app.use(express.json());
 app.use(cookieparser());
-app.use("/uploads", express.static(__dirname + "/uploads"));
+// app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -113,21 +119,22 @@ app.get("/post/:id", async (req, res) => {
 app.put("/post", upload.none(), async (req, res) => {
   // res.json(req.body);
   try {
-    const { id,title, summary, content, url } = req.body;
+    const { id, title, summary, content, url } = req.body;
     const { token } = req.cookies;
 
     // You should add validation here to ensure all required fields are present.
 
     jwt.verify(token, secret, {}, async (err, info) => {
       if (err) throw err;
-      const postdoc=await post.findById(id);
-      const isauthor=JSON.stringify(postdoc.author) === JSON.stringify(info.id);
+      const postdoc = await post.findById(id);
+      const isauthor =
+        JSON.stringify(postdoc.author) === JSON.stringify(info.id);
       // res.json({isauthor,postdoc,info});
 
-      if(!isauthor){
-        return res.status(400).json('You are not the author :/');
+      if (!isauthor) {
+        return res.status(400).json("You are not the author :/");
       }
-      await postdoc.updateOne({title,summary,content,cover:url})
+      await postdoc.updateOne({ title, summary, content, cover: url });
       // const postdoc = await post.create({
       //   title,
       //   summary,
@@ -141,7 +148,7 @@ app.put("/post", upload.none(), async (req, res) => {
   } catch (error) {
     console.error("Error creating post:", error);
     res.status(500).json({ error: "Internal Server Error" });
-  }  
+  }
 });
 
 app.listen(port, () => {
