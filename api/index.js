@@ -3,7 +3,7 @@ const app = express();
 require("dotenv").config();
 const cors = require("cors");
 const { default: mongoose } = require("mongoose");
-const port = 4000;
+const port = process.env.PORT;
 const user = require("./models/user.js");
 const bcrypt = require("bcryptjs");
 const salt = bcrypt.genSaltSync(10);
