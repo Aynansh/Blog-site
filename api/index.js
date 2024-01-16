@@ -100,11 +100,6 @@ app.post("/post", upload.none(), async (req, res) => {
   try {
     const { title, summary, content, url } = req.body;
     const { token } = req.cookies;
-     
-  if (!token) {
-    // Redirect to the login page
-    return res.redirect('http://localhost:3000/login');
-  }
 
     // You should add validation here to ensure all required fields are present.
 
