@@ -101,6 +101,10 @@ app.post("/post", upload.none(), async (req, res) => {
     const { title, summary, content, url } = req.body;
     const { token } = req.cookies;
 
+    if (!token) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
+
     // You should add validation here to ensure all required fields are present.
 
     jwt.verify(token, secret, {}, async (err, info) => {
