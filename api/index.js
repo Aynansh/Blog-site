@@ -25,7 +25,12 @@ app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieparser());
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000", // Specify the allowed origin (your frontend)
+  credentials: true, // Allow credentials (cookies)
+};
+
+app.use(cors(corsOptions));
 
 // app.all("*", function (req, res) {
 //   res.header("Access-Control-Allow-Origin", "http://localhost:3000");
@@ -72,6 +77,10 @@ app.post("/login", async (req, res) => {
 
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
+  if (!token) {
+    // Redirect to the login page
+    return res.redirect('http://localhost:3000/login');
+  }
   jwt.verify(token, secret, {}, (err, info) => {
     if (err) throw err;
     res.json(info);
@@ -86,6 +95,11 @@ app.post("/post", upload.none(), async (req, res) => {
   try {
     const { title, summary, content, url } = req.body;
     const { token } = req.cookies;
+
+  if (!token) {
+    // Redirect to the login page
+    return res.redirect('http://localhost:3000/login');
+  }
 
     // You should add validation here to ensure all required fields are present.
 
