@@ -26,8 +26,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieparser());
 const corsOptions = {
-  origin: "http://localhost:3000", // Specify the allowed origin (your frontend)
-  credentials: true, // Allow credentials (cookies)
+  origin: ["http://localhost:3000", "https://gorgeous-lion-zipper.cyclic.app"],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
