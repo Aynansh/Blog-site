@@ -22,6 +22,11 @@ const upload = multer();
 app.use(express.json());
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Specify your frontend origin
+  res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+  next();
+});
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieparser());
@@ -77,8 +82,6 @@ app.post("/login", async (req, res) => {
 
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Specify your frontend origin
-  res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
   if (!token) {
     // Redirect to the login page
     return res.redirect('http://localhost:3000/login');
@@ -97,8 +100,7 @@ app.post("/post", upload.none(), async (req, res) => {
   try {
     const { title, summary, content, url } = req.body;
     const { token } = req.cookies;
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Specify your frontend origin
-      res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+     
   if (!token) {
     // Redirect to the login page
     return res.redirect('http://localhost:3000/login');
@@ -166,8 +168,7 @@ app.put("/post", upload.none(), async (req, res) => {
       //   cover: url,
       //   author: info.id,
       // });
-      res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Specify your frontend origin
-      res.header('Access-Control-Allow-Credentials', 'true'); // Allow credentials
+      
       res.json(postdoc);
     });
   } catch (error) {
